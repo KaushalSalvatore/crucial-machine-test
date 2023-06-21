@@ -26,7 +26,7 @@
         <EditText
             android:textColor="@color/black"
             android:id="@+id/txt_searchCatgory"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:textSize="15dp"
@@ -78,17 +78,6 @@
             android:background="@drawable/grid">
         </ImageView>
 
-
-
-        <ImageView
-            android:layout_toLeftOf="@+id/image_select_category"
-            android:id="@+id/image_lazyload"
-            android:layout_marginRight="8dp"
-            android:layout_centerVertical="true"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/spinnerloader">
-        </ImageView>
 
     </RelativeLayout>
 

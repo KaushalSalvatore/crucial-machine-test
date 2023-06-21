@@ -17,7 +17,11 @@ import android.widget.Toast;
 import com.crucialtechnologies.task.R;
 import com.crucialtechnologies.task.adapter.Joblist_adapter;
 import com.crucialtechnologies.task.pogo.customer_record.CustomerRecords;
+import com.crucialtechnologies.task.pogo.customer_record.Job;
+import com.crucialtechnologies.task.service.EndlessRecyclerOnScrollListener;
 import com.crucialtechnologies.task.service.RetrofitClient;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,12 +35,11 @@ public class JobList extends AppCompatActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progress_bar;
 
-    @BindView(R.id.idNestedSV)
-    NestedScrollView nestedSV;
     int  scrollPossition = 1;
-    Boolean isScrolling = false;
-    int currentItems, totalItems, scrollOutItems;
-    LinearLayoutManager manager;
+    boolean isLoading = false;
+
+    ArrayList<Job> rowsArrayList = new ArrayList<>();
+    Joblist_adapter joblist_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,49 +47,18 @@ public class JobList extends AppCompatActivity {
         setContentView(R.layout.activity_job_list);
         ButterKnife.bind(this);
         jobList(24,scrollPossition);
-//        nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                // on scroll change we are checking when users scroll as bottom.
-//                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-//                    scrollPossition++;
-//                        jobList(24,scrollPossition);
-//
-//                }
-//            }
-//        });
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recycler_joblist.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                Log.e("TAG", "onLoadMore: "+current_page );
+            }
+        });
 
-//        recycler_joblist.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-//                {
-//                    isScrolling = true;
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                currentItems = manager.getChildCount();
-//                totalItems = manager.getItemCount();
-//                scrollOutItems = manager.findFirstVisibleItemPosition();
-//
-//                if(isScrolling && (currentItems + scrollOutItems == totalItems))
-//                {
-//                    isScrolling = false;
-//                    scrollPossition++;
-//                    jobList( 24,scrollPossition);
-//                }
-//            }
-//        });
 
-//        jobList(24,scrollPossition);
+
+
     }
-
-
     private void jobList(int perpagecount,int count) {
         progress_bar.setVisibility(View.VISIBLE);
         Call<CustomerRecords> call = RetrofitClient.getInstance().getMyApi().getJobList(perpagecount,count);
@@ -98,7 +70,8 @@ public class JobList extends AppCompatActivity {
                 if(CustomerRecords.getSuccess().equalsIgnoreCase("true") && CustomerRecords.getMessage().equalsIgnoreCase("Record found")){
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false);
                     recycler_joblist.setLayoutManager(linearLayoutManager);
-                    Joblist_adapter joblist_adapter = new Joblist_adapter(JobList.this,CustomerRecords.getJobList());
+                    rowsArrayList = (ArrayList<Job>) CustomerRecords.getJobList();
+                    joblist_adapter = new Joblist_adapter(JobList.this,rowsArrayList);
                     recycler_joblist.setAdapter(joblist_adapter); // set the Adapter to RecyclerView
                 }else{
                     Toast.makeText(getApplicationContext(),"No Data", Toast.LENGTH_SHORT).show();
@@ -112,4 +85,7 @@ public class JobList extends AppCompatActivity {
             }
         });
     }
+
+
+
 }

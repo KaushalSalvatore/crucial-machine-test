@@ -2,6 +2,43 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/gray">
+
+    <ImageView
+        android:layout_marginLeft="10dp"
+        android:padding="5sp"
+        android:id="@+id/iv_technician"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/technician">
+    </ImageView>
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/iv_technician"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="plumbing Services"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:id="@+id/tv_subcategoryname">
+
+    </TextView>
+
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:padding="5sp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/chevron">
+    </ImageView>
+
+
+
 
 </RelativeLayout>

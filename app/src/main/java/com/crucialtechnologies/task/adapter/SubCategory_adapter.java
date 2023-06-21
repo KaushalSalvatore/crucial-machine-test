@@ -44,7 +44,7 @@ public class SubCategory_adapter extends RecyclerView.Adapter<SubCategory_adapte
         holder.relative_technician.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                subCategoryItemCLick.subCategoryItemCLick(service.getServiceName(),service.getServiceId());
+                subCategoryItemCLick.subCategoryItemCLick(service.getServiceName(),""+service.getServiceId());
             }
         });
     }
@@ -69,7 +69,7 @@ public class SubCategory_adapter extends RecyclerView.Adapter<SubCategory_adapte
         }
     }
     public interface subCategoryItemCLick{
-        void subCategoryItemCLick(String name,int id);
+        void subCategoryItemCLick(String name,String id);
 
     }
 }

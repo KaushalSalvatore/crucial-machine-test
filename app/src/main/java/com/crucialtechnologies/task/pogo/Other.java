@@ -11,7 +11,15 @@ public class Other {
     private String title;
     @SerializedName("services")
     @Expose
-    private List<Service__2> services;
+    private List<Service> otherServices;
+
+    public List<Service> getOtherServices() {
+        return otherServices;
+    }
+
+    public void setOtherServices(List<Service> otherServices) {
+        this.otherServices = otherServices;
+    }
 
     public String getTitle() {
         return title;
@@ -21,12 +29,5 @@ public class Other {
         this.title = title;
     }
 
-    public List<Service__2> getServices() {
-        return services;
-    }
-
-    public void setServices(List<Service__2> services) {
-        this.services = services;
-    }
 
 }

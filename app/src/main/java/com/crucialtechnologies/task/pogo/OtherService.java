@@ -3,7 +3,7 @@ package com.crucialtechnologies.task.pogo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Service__2 {
+public class OtherService {
 
     @SerializedName("service_id")
     @Expose

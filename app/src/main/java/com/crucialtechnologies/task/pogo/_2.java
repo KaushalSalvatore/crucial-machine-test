@@ -14,7 +14,7 @@ public class _2 {
     private Integer showOnTop;
     @SerializedName("services")
     @Expose
-    private List<Service__1> services;
+    private List<Service> services;
 
     public String getTitle() {
         return title;
@@ -32,11 +32,11 @@ public class _2 {
         this.showOnTop = showOnTop;
     }
 
-    public List<Service__1> getServices() {
+    public List<Service> getServices() {
         return services;
     }
 
-    public void setServices(List<Service__1> services) {
+    public void setServices(List<Service> services) {
         this.services = services;
     }
 

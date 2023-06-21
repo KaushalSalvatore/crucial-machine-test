@@ -25,6 +25,11 @@ public class Category_adapter extends RecyclerView.Adapter<Category_adapter.View
         this.categoryItemCLick=categoryItemCLick;
 
     }
+
+    public void notifyList(List<Service> services) {
+        this.services = services;
+        notifyDataSetChanged();
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -40,7 +45,7 @@ public class Category_adapter extends RecyclerView.Adapter<Category_adapter.View
        holder.relative_technician.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               categoryItemCLick.categoryItemCLick(services1.getServiceName(),services1.getServiceId());
+               categoryItemCLick.categoryItemCLick(services1.getServiceName(),""+services1.getServiceId());
            }
        });
 
@@ -69,7 +74,7 @@ public class Category_adapter extends RecyclerView.Adapter<Category_adapter.View
     }
 
     public interface categoryItemCLick{
-        void categoryItemCLick(String name,int id);
+        void categoryItemCLick(String name,String id);
 
     }
 }

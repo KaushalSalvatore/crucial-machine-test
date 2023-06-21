@@ -14,7 +14,7 @@ public class CustomerRecords {
     private String message;
     @SerializedName("jobList")
     @Expose
-    private List<Job> jobList;
+    public List<Job> jobList;
     @SerializedName("current_page")
     @Expose
     private String currentPage;

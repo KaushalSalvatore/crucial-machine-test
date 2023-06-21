@@ -438,6 +438,20 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onLocationChanged(Location location) {
     }
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
+    }
     private void displayLocation() {
 
         onPlotLocation(true, LOCATION_SOURCE, LastLocation.getLatitude(), LastLocation.getLongitude(),LOCATION_SOURCE);

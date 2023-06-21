@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,30 +34,33 @@ import retrofit2.Response;
 public class Sub_Category extends AppCompatActivity implements SubCategory_adapter.subCategoryItemCLick {
     @BindView(R.id.txt_searchCatgory)
     EditText txt_searchCatgory;
-
-
-
     @BindView(R.id.txt_category)
     TextView txt_category;
-
     @BindView(R.id.recycler_category)
     RecyclerView recycler_category;
-
     @BindView(R.id.progress_bar)
     ProgressBar progress_bar;
+
+    String category ="";
+    String Subcategory ="";
+    String id ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_category);
         ButterKnife.bind(this);
+        category = getIntent().getStringExtra("category");
+        Subcategory = getIntent().getStringExtra("name");
+        id = getIntent().getStringExtra("id");
+        Log.e(TAG, "onCreate: "+id+""+Subcategory+""+category );
         txt_category.setText(getIntent().getStringExtra("category")+ " > "+getIntent().getStringExtra("name"));
         getCategories();
 
     }
     private void getCategories() {
         progress_bar.setVisibility(View.VISIBLE);
-        Call<Subcategory> call = RetrofitClient.getInstance().getMyApi().getSubcategory("7");
+        Call<Subcategory> call = RetrofitClient.getInstance().getMyApi().getSubcategory(id);
         call.enqueue(new Callback<Subcategory>() {
             @Override
             public void onResponse(Call<Subcategory> call, Response<Subcategory> response) {
@@ -80,7 +84,12 @@ public class Sub_Category extends AppCompatActivity implements SubCategory_adapt
     }
 
     @Override
-    public void subCategoryItemCLick(String name, int id) {
-        Log.e(TAG, "subCategoryItemCLick: "+name+"---------"+id );
+    public void subCategoryItemCLick(String name, String id) {
+        Intent i = new Intent(Sub_Category.this, Sub_SubCategory.class);
+        i.putExtra("category", category);
+        i.putExtra("Subcategory", Subcategory);
+        i.putExtra("name", name);
+        i.putExtra("id", id);
+        startActivity(i);
     }
 }
