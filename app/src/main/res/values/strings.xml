@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Category_GridView</string>
+    <string name="Find_licensed_insured_nearest_local_Pro_in_real_time">Find licensed, insured, nearest local Pro\'s in real time</string>
+    <string name="what_service_are_you_looking_for">What service are you looking for ?</string>
+    <string name="show_categories">Show Categories</string>
+    <string name="lazy_loading">Lazy Loading</string>
+    <string name="map_direction">Map Direction</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="message_please_enable_location_service_from_settings">Please enable location service from the Settings.</string>
+    <string name="btn_open_settings">Open Settings</string>
+    <string name="places_api_key" translatable="false">AIzaSyCK9GA0kwlWG1cFz0GvT09bj42lVhYUZIg</string>
+    <string name="font_roboto">Roboto</string>
+    <string name="font_roboto_regular">Roboto-Regular.ttf</string>
+    <string name="font_roboto_condensed_bold">Roboto-Bold.ttf</string>
+    <string name="font_roboto_condensed_italic">Roboto-Italic.ttf</string>
+    <string name="font_roboto_condensed_bold_italic">Roboto-BoldItalic.ttf</string>
+    <string name="font_roboto_condensed_light">Roboto-Light.ttf</string>
+    <string name="font_roboto_condensed_thin">Roboto-Thin.ttf</string>
+
+    <string name="textstyle_normal">4</string>
+</resources>
