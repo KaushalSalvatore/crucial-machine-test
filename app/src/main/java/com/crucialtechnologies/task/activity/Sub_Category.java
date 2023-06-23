@@ -32,8 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Sub_Category extends AppCompatActivity implements SubCategory_adapter.subCategoryItemCLick {
-    @BindView(R.id.txt_searchCatgory)
-    EditText txt_searchCatgory;
     @BindView(R.id.txt_category)
     TextView txt_category;
     @BindView(R.id.recycler_category)

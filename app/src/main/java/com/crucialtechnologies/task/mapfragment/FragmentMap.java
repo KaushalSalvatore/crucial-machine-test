@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,12 +73,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-
-
-
 public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
-           com.google.android.gms.location.LocationListener, android.location.LocationListener,GoogleApiClient.ConnectionCallbacks, GoogleMap.OnMyLocationButtonClickListener{
+        com.google.android.gms.location.LocationListener, android.location.LocationListener,GoogleApiClient.ConnectionCallbacks, GoogleMap.OnMyLocationButtonClickListener{
     private static GoogleMapOptions options = new GoogleMapOptions()
             .mapType(GoogleMap.MAP_TYPE_NORMAL)
             .compassEnabled(true)
@@ -98,19 +95,19 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
     private double lats = 0.0;
     private double longs = 0.0;
 
-    private double latsDes = 22.7290114;
-    private double longsDes = 75.8881497;
+    private double latsDes = 22.7177;
+    private double longsDes = 75.8545;
 
-
-//22.7290114,75.8881497
+    //22.7290114,75.8881497
     private static final int LOCATION_SOURCE = 0;
     private static final int LOCATION_DESTINATION = 1;
     private static final int LOCATION_SOURCE_DESTINATION = 2;
     String latitude,longitude;
     LocationManager mLocationManager;
-
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
     String version;
-      boolean placeSearch=true;
+    boolean placeSearch=true;
     final int AUTOCOMPLETE_REQUEST_SOURCE = 1;
     final int AUTOCOMPLETE_REQUEST_DES = 2;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -160,19 +157,19 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
                     if (ContextCompat.checkSelfPermission(getContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-                       //buildGoogleApiClient();
+                        //buildGoogleApiClient();
                         mMap.setMyLocationEnabled(true);
                     }
                 }
                 else {
-                   // buildGoogleApiClient();
+                    // buildGoogleApiClient();
                     mMap.setMyLocationEnabled(true);
                 }
-               // setupMapOnCameraChange();
+                // setupMapOnCameraChange();
             }
         });
 
-          if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showGpsDisabledDialog();
         }
 
@@ -219,7 +216,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
         return  v;
 
     }
-   void addLocationUpdateListener(LocationUpdateListener listener) {
+    void addLocationUpdateListener(LocationUpdateListener listener) {
         isRequestingLocationUpdates = true;
         if (locationUpdateListeners == null) {
             locationUpdateListeners = new ArrayList<>();
@@ -228,9 +225,9 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
     }
 
     public  void intView(View v)
-  {
-      mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-  }
+    {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+    }
     void getCurrentLocation() {
         setUpLocationClientIfNeeded();
         if (!mGoogleApiClient.isConnected()) {
@@ -330,6 +327,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
             Log.e("IGA", "Address" + add);
             lats = lat;
             longs = lng;
+            onPlotLocation(true,LOCATION_SOURCE_DESTINATION,lats,longs,AUTOCOMPLETE_REQUEST_SOURCE);
+
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -403,15 +402,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
             if (ContextCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-               // buildGoogleApiClient();
+                // buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
         }
         else {
-           // buildGoogleApiClient();
+            // buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
-      //  setupMapOnCameraChange();
+        //  setupMapOnCameraChange();
     }
 
     @Override
@@ -435,23 +434,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
     private void displayLocation() {
 
         onPlotLocation(true, LOCATION_SOURCE, LastLocation.getLatitude(), LastLocation.getLongitude(),LOCATION_SOURCE);
@@ -487,11 +470,11 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
                         LatLng des;
                         if (applyfor==1)
                         {
-                             des=new LatLng(newLatLng.latitude,newLatLng.longitude);
-                             newLatLng = new LatLng(latsDes, longsDes);
+                            des=new LatLng(newLatLng.latitude,newLatLng.longitude);
+                            newLatLng = new LatLng(latsDes, longsDes);
                         }
-                       else {
-                             des=new LatLng(lats,longs);
+                        else {
+                            des=new LatLng(lats,longs);
                         }
                         mMap.addMarker(new MarkerOptions().position(des).icon(smallMarkerIconSource));
                         mMap.addMarker(new MarkerOptions().position(newLatLng).icon(smallMarkerIconDestination));
@@ -532,7 +515,14 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
         {
             e.printStackTrace();
         }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding));
+        try {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         String urlfirst = getUrl(lstLatLngRoute.get(0), lstLatLngRoute.get(1));
         FetchUrl FetchUrl = new FetchUrl();
         // Start downloading json data from Google Directions API
@@ -572,7 +562,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
 
     }
     public void showGpsDisabledDialog(){
-       // Dialog dialog = new Dialog(this, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
+        // Dialog dialog = new Dialog(this, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
         AlertDialog.Builder ab = new AlertDialog.Builder(getContext());
         ab.setMessage("In order to use this app you need the GPS to be enabled.");
         ab.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -744,5 +734,38 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
             return hasLocationPermissions = true;
         }
     }
+    @Override
+    public void onLocationChanged(Location location) {
 
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+        //Place current location marker
+        latitude= String.valueOf(location.getLatitude());
+        longitude= String.valueOf(location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        //onPlotLocation(true,LOCATION_SOURCE_DESTINATION,lats,longs,AUTOCOMPLETE_REQUEST_SOURCE);
+
+       /* MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mCurrLocationMarker = mMap.addMarker(markerOptions);*/
+
+        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+        // mMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
+        //stop location updates
+        try {
+            if (mGoogleApiClient != null) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+    }
 }

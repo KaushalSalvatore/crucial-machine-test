@@ -36,8 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Category extends AppCompatActivity implements Category_adapter.categoryItemCLick {
-    @BindView(R.id.txt_searchCatgory)
-    EditText txt_searchCatgory;
+
     @BindView(R.id.image_select_category)
     ImageView image_select_category;
     @BindView(R.id.txt_category)

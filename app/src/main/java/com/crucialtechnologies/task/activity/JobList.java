@@ -35,6 +35,9 @@ public class JobList extends AppCompatActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progress_bar;
 
+    @BindView(R.id.idNestedSV)
+    NestedScrollView nestedSV;
+
     int  scrollPossition = 1;
     boolean isLoading = false;
 
@@ -47,15 +50,35 @@ public class JobList extends AppCompatActivity {
         setContentView(R.layout.activity_job_list);
         ButterKnife.bind(this);
         jobList(24,scrollPossition);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recycler_joblist.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+
+
+
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        recycler_joblist.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int current_page) {
+//                Log.e("TAG", "onLoadMore: "+current_page );
+//            }
+//        });
+
+        nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onLoadMore(int current_page) {
-                Log.e("TAG", "onLoadMore: "+current_page );
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                // on scroll change we are checking when users scroll as bottom.
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    // in this method we are incrementing page number,
+                    // making progress bar visible and calling get data method.
+                    scrollPossition++;
+                    // on below line we are making our progress bar visible.
+                    progress_bar.setVisibility(View.VISIBLE);
+                    if (scrollPossition < 20) {
+                        // on below line we are again calling
+                        // a method to load data in our array list.
+                        jobList(24,scrollPossition);
+                    }
+                }
             }
         });
-
-
 
 
     }
